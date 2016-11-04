@@ -1,10 +1,14 @@
 package org.p99.scala
 
-import org.scalatest._
-
 class P01Spec extends UnitSpec {
 
-  // TODO
+  "get_last_element_procedural" should "get last element of normal list" in {
+    assert(3 == P01.get_last_element_procedural(List(1, 2, 3)))
+  }
+
+  "get_last_element_recursive" should "get last element of normal list" in {
+    assert(3 == P01.get_last_element_recursive(List(1, 2, 3)))
+  }
 
 }
 
