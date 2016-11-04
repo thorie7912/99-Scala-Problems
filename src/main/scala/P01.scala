@@ -5,15 +5,19 @@ object P01 {
   // procedural-style, getting the last element in a list
   // this is NOT an ideal solution in a functional programming paradigm
   def get_last_element_procedural[Type](list: List[Type]): Type = {
-      var i = 0
-      if (list.length == 0) {
-        throw new Exception("Cannot get last item in an empty list.")
+
+    if (list.length == 0) {
+      throw new Exception("Cannot get last item in an empty list.")
+    }
+
+    var i = 0
+
+    for (i <- 0 until list.length) {
+      if (i == list.length-1) {
+        return list(i)
       }
-      for (i <- 0 until list.length) {
-        if (i == list.length-1) {
-          return list(i)
-        }
-      }
+    }
+
     throw new Exception("Unable to get last item.")
   }
 
@@ -49,7 +53,9 @@ object P01 {
     list match {
       // Base case:
       // If list matches the pattern "head :: Nil" meaning a List with head element
-      // and a Nil (empty) tail element, then return the head
+      // and a Nil (empty) tail element, then return the head. The type of head is Type,
+      // but the type of Nil is List[_]. Since List[Type] ++ List[Nothing] = List[Type], it
+      // is able to match a pattern that is List[Type] :: List[Nothing], or head :: Nil.
       // Note: the return keyword should be avoided, see: https://tpolecat.github.io/2014/05/09/return.html
       case head :: Nil => /*return*/ head
 
