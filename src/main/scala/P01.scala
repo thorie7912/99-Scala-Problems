@@ -44,22 +44,22 @@ object P01 {
   // recursive with match and extracted cases, getting the last element in a list
   def get_last_element_recursive_with_match_extracted[T](list: List[T]): T = {
 
-    def onlyHead[T](list: List[T]): List[T] = {
-      list.head :: Nil
+    def onlyHead[T](list: List[T]): Boolean = {
+      list.head != Nil && list.tail == Nil
     }
 
     def hasNonEmptyTail[T](list: List[T]): Boolean = {
-      _ :: list.tail
+      list.head != Nil && list.tail != Nil
     }
 
-    def everythingElse[T](list: List[T]): Boolean = {
-      _
+    def emptyList[T](list: List[T]): Boolean = {
+      list.head == Nil
     }
 
     list match {
-      case onlyHead(list) => list.head
-      case hasNonEmptyTail(list) => get_last_element_recursive_with_match_extracted(list.tail)
-      case everythingElse(list) => throw new NoSuchElementException
+      case list if onlyHead(list) => list.head
+      case list if hasNonEmptyTail(list) => get_last_element_recursive_with_match_extracted(list.tail)
+      case list if emptyList(list) => throw new NoSuchElementException
     }
   }
 }
