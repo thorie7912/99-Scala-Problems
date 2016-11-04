@@ -5,7 +5,7 @@ import scala.collection.immutable.::
 object P01 {
 
   // procedural-style, getting the last element in a list
-  def get_last_element_procedural[T](list: List[T]): T = {
+  def get_last_element_procedural[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
       var i = 0
       if (list.length == 0) {
         throw new Exception("Cannot get last item in an empty list.")
@@ -19,7 +19,7 @@ object P01 {
   }
 
   // recursive-style, getting the last element in a list
-  def get_last_element_recursive[T](list: List[T]): T = {
+  def get_last_element_recursive[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
     if (list.tail == Nil) {
       /*return*/ list.head // the return keyword is optional
     } else {
@@ -28,12 +28,12 @@ object P01 {
   }
 
   // built-in, getting the last element in a list
-  def get_last_element_builtin[T](list: List[T]): T = {
+  def get_last_element_builtin[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
     /*return*/ list.last // the return keyword is optional
   }
 
   // recursive with match, getting the last element in a list
-  def get_last_element_recursive_with_match[T](list: List[T]): T = {
+  def get_last_element_recursive_with_match[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
     list match {
       case head :: Nil => head
       case _ :: tail => get_last_element_recursive_with_match(tail)
@@ -42,22 +42,28 @@ object P01 {
   }
 
   // recursive with match and extracted cases, getting the last element in a list
-  def get_last_element_recursive_with_match_extracted[T](list: List[T]): T = {
+  def get_last_element_recursive_with_match_extracted[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
 
-    def onlyHead[T](list: List[T]): Boolean = {
+    object ListOnlyHead {
+      def unapplySeq[T](arg: List[T]): Option[List[T]] = {
+        // not sure what goes here???
+      }
+    }
+
+    def onlyHead[SomeDefinedType](list: List[SomeDefinedType]): Boolean = {
       list.head != Nil && list.tail == Nil
     }
 
-    def hasNonEmptyTail[T](list: List[T]): Boolean = {
+    def hasNonEmptyTail[SomeDefinedType](list: List[SomeDefinedType]): Boolean = {
       list.head != Nil && list.tail != Nil
     }
 
-    def emptyList[T](list: List[T]): Boolean = {
+    def emptyList[SomeDefinedType](list: List[SomeDefinedType]): Boolean = {
       list.head == Nil
     }
 
     list match {
-      case list if onlyHead(list) => list.head
+      case ListOnlyHead(list) => list.head
       case list if hasNonEmptyTail(list) => get_last_element_recursive_with_match_extracted(list.tail)
       case list if emptyList(list) => throw new NoSuchElementException
     }
