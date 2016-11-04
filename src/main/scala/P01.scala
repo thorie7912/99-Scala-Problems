@@ -1,11 +1,9 @@
 package org.p99.scala
 
-import scala.collection.immutable.::
-
 object P01 {
 
   // procedural-style, getting the last element in a list
-  def get_last_element_procedural[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
+  def get_last_element_procedural[Type](list: List[Type]): Type = {
       var i = 0
       if (list.length == 0) {
         throw new Exception("Cannot get last item in an empty list.")
@@ -19,7 +17,7 @@ object P01 {
   }
 
   // recursive-style, getting the last element in a list
-  def get_last_element_recursive[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
+  def get_last_element_recursive[Type](list: List[Type]): Type = {
     if (list.tail == Nil) {
       /*return*/ list.head // the return keyword is optional
     } else {
@@ -28,44 +26,36 @@ object P01 {
   }
 
   // built-in, getting the last element in a list
-  def get_last_element_builtin[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
+  def get_last_element_builtin[Type](list: List[Type]): Type = {
     /*return*/ list.last // the return keyword is optional
   }
 
   // recursive with match, getting the last element in a list
-  def get_last_element_recursive_with_match[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
+  def get_last_element_recursive_with_match[Type](list: List[Type]): Type = {
+
+    import scala.collection.immutable.::
+
+    // Perform a pattern match on the list to recursively find the last element.
+    // Since all Lists are made up of a two components (head element and tail List),
+    // we can use this fact to recursively process the tail until there is no tail
+    // left to process. In Scala, a List can be represented by its two components
+    // using the :: (or cons) method, as in head :: tail.
     list match {
-      case head :: Nil => head
-      case _ :: tail => get_last_element_recursive_with_match(tail)
+      // Base case:
+      // If list matches the pattern "head :: Nil" meaning a List with head element
+      // and a Nil (empty) tail element, then return the head
+      case head :: Nil => /*return*/ head // the return keyword is optional
+
+      // Recursive case:
+      // Else if list matches the pattern "_ :: tail" meaning a List with any head element
+      // and a tail element, then recurse to get last element of the tail.
+      // The _ represents an unnamed wildcard; we could use a variable name "head" but we
+      // don't need to use the variable later so a wildcard will suffice.
+      case _ :: tail => /*return*/ get_last_element_recursive_with_match(tail) // the return keyword is optional
+
+      // Else in all other cases, treat as an error (e.g. empty list).
+      // The _ represents an unnamed wildcard.
       case _ => throw new NoSuchElementException
-    }
-  }
-
-  // recursive with match and extracted cases, getting the last element in a list
-  def get_last_element_recursive_with_match_extracted[SomeDefinedType](list: List[SomeDefinedType]): SomeDefinedType = {
-
-    object ListOnlyHead {
-      def unapplySeq[T](arg: List[T]): Option[List[T]] = {
-        // not sure what goes here???
-      }
-    }
-
-    def onlyHead[SomeDefinedType](list: List[SomeDefinedType]): Boolean = {
-      list.head != Nil && list.tail == Nil
-    }
-
-    def hasNonEmptyTail[SomeDefinedType](list: List[SomeDefinedType]): Boolean = {
-      list.head != Nil && list.tail != Nil
-    }
-
-    def emptyList[SomeDefinedType](list: List[SomeDefinedType]): Boolean = {
-      list.head == Nil
-    }
-
-    list match {
-      case ListOnlyHead(list) => list.head
-      case list if hasNonEmptyTail(list) => get_last_element_recursive_with_match_extracted(list.tail)
-      case list if emptyList(list) => throw new NoSuchElementException
     }
   }
 }
